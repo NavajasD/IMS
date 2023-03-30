@@ -1,6 +1,8 @@
 using IMS.WebApp.Data;
+using IMS.Plugins.InMemory;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using IMS.UseCases;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+
+builder.Services
+    .AddRepositories()
+    .AddUseCases();
 
 var app = builder.Build();
 

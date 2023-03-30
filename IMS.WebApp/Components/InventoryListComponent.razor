@@ -1,0 +1,35 @@
+﻿@inject IViewInventoriesByNameUseCase ViewInventoriesByNameUseCase
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if(inventoriesList != null && inventoriesList.Count > 0)
+        {
+            foreach (var inventory in inventoriesList)
+            {
+                <InventoryListItemComponent InventoryItem="inventory" />
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Inventory> inventoriesList = new List<Inventory>();
+
+    [Parameter]
+    public string SearchTerm { get; set; } = string.Empty;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        base.OnParametersSet();
+
+        inventoriesList = (await ViewInventoriesByNameUseCase.ExecuteAsync(SearchTerm)).ToList();
+    }
+} 
