@@ -10,22 +10,15 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(var inventory in inventoriesList)
+        @if(inventoriesList != null && inventoriesList.Count > 0)
         {
-            <tr>
-                <td>@inventory.InventoryName</td>
-                <td>@inventory.Quantity</td>
-                <td>@inventory.Price.ToString("c")</td>
-                <td>
-                    <button
-                        type="button"
-                        class="btn btn-light"></button>
-                </td>
-            </tr>
+            foreach (var inventory in inventoriesList)
+            {
+                <InventoryListItemComponent InventoryItem="inventory" />
+            }
         }
     </tbody>
 </table>
-
 
 @code {
     private List<Inventory> inventoriesList = new List<Inventory>();
