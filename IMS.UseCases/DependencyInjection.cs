@@ -1,5 +1,7 @@
 ﻿using IMS.UseCases.Inventories;
 using IMS.UseCases.Inventories.Interfaces;
+using IMS.UseCases.Products;
+using IMS.UseCases.Products.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -17,6 +19,8 @@ namespace IMS.UseCases
             services.AddTransient<IAddInventoryUseCase, AddInventoryUseCase>();
             services.AddTransient<IEditInventoryUseCase, EditInventoryUseCase>();
             services.AddTransient<IViewInventoryByIdUseCase, ViewInventoryByIdUseCase>();
+
+            services.AddTransient<IViewProductsByNameUseCase, ViewProductsByNameUseCase>();
 
             return services;
         }
