@@ -13,6 +13,7 @@ namespace IMS.Plugins.InMemory
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddSingleton<IInventoryRepository, InventoryRepository>();
+            services.AddSingleton<IProductRepository, ProductRepository>();
             return services;
         }
     }
