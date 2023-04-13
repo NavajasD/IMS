@@ -33,6 +33,20 @@ namespace IMS.Plugins.InMemory
             return Task.CompletedTask;
         }
 
+        public async Task<Product> GetProductByIdAsync(int productId)
+        {
+            var prod = _products.First(x => x.ProductId == productId);
+            var newProd = new Product()
+            {
+                ProductId = prod.ProductId,
+                ProductName = prod.ProductName,
+                Quantity = prod.Quantity,
+                Price = prod.Price,
+                ProductInventories = prod.ProductInventories
+            };
+            return await Task.FromResult(newProd);
+        }
+
         public async Task<IEnumerable<Product>> GetProductsByNameAsync(string name)
         {
             if (string.IsNullOrWhiteSpace(name)) 
