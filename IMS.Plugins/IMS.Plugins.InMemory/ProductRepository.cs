@@ -20,6 +20,19 @@ namespace IMS.Plugins.InMemory
                 new() {ProductId = 2, ProductName = "Car", Quantity = 5, Price = 25000}
             };
         }
+
+        public Task AddProductAsync(Product product)
+        {
+            if (_products.Any(x => x.ProductName.Equals(product.ProductName, StringComparison.OrdinalIgnoreCase)))
+                return Task.CompletedTask;
+
+            product.ProductId = _products.Max(x => x.ProductId) + 1;
+
+            _products.Add(product);
+
+            return Task.CompletedTask;
+        }
+
         public async Task<IEnumerable<Product>> GetProductsByNameAsync(string name)
         {
             if (string.IsNullOrWhiteSpace(name)) 
