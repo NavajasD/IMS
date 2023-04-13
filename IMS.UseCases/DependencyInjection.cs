@@ -22,6 +22,7 @@ namespace IMS.UseCases
 
             services.AddTransient<IViewProductsByNameUseCase, ViewProductsByNameUseCase>();
             services.AddTransient<IAddProductUseCase, AddProductUseCase>();
+            services.AddTransient<IEditProductUseCase, EditProductUseCase>();
 
             return services;
         }

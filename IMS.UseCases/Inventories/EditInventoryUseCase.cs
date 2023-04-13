@@ -19,7 +19,7 @@ namespace IMS.UseCases.Inventories
 
         public async Task ExecuteAsync(Inventory inventory)
         {
-            await this.inventoryRepository.UpdateInventoryAsync(inventory);
+            await inventoryRepository.UpdateInventoryAsync(inventory);
         }
     }
 }
