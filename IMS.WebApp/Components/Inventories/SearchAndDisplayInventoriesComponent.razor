@@ -1,0 +1,36 @@
+﻿@inject IViewInventoriesByNameUseCase ViewInventoriesByNameUseCase;
+
+<SearchInventoryComponent OnSearchInventory="OnSearchInventory"/>
+@if (_inventories.Count > 0)
+{
+    <div style="overflow-y:auto; max-height:300px; border:1px solid silver; padding-top:5px">
+        <ul style="list-style-type:none">
+            @foreach(var inventory in _inventories)
+            {
+                <li @key="inventory.InventoryId"
+                    @onclick="@(async () => await OnSelectInventory(inventory))"
+                    style="cursor:pointer">
+                    @inventory.InventoryName
+                </li>
+            }
+        </ul>
+    </div>
+}
+
+@code {
+    private List<Inventory> _inventories = new();
+
+    [Parameter]
+    public EventCallback<Inventory> OnInventorySelected { get; set; }
+
+    private async Task OnSearchInventory(string searchTerm)
+    {
+        _inventories = (await ViewInventoriesByNameUseCase.ExecuteAsync(searchTerm)).ToList();
+    }
+
+    private async Task OnSelectInventory(Inventory inventory)
+    {
+        await OnInventorySelected.InvokeAsync(inventory);
+        _inventories.Clear();
+    }
+}
