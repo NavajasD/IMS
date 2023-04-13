@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IMS.CoreBusiness.Validations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -20,5 +21,25 @@ namespace IMS.CoreBusiness
 
         [Range(0, double.MaxValue, ErrorMessage = "Price must be greater or equal to 0")]
         public double Price { get; set; }
+        [Product_EnsurePriceIsGreaterThanTotalInventoriesCost]
+        public List<ProductInventory> ProductInventories { get; set; } = new();
+
+        public void AddInventory(Inventory inventory)
+        {
+            if (!ProductInventories.Any(x => x.Inventory != null &&
+            x.Inventory.InventoryName.Equals(inventory.InventoryName)))
+            {
+                ProductInventories.Add(
+                    new()
+                    {
+                        InventoryId = inventory.InventoryId,
+                        Inventory = inventory,
+                        InventoryQuantity = 1,
+                        ProductId = this.ProductId,
+                        Product = this
+                    }
+                    );
+            }
+        }
     }
 }
