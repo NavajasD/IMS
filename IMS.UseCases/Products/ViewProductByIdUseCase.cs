@@ -1,5 +1,6 @@
 ﻿using IMS.CoreBusiness;
 using IMS.UseCases.PluginInterfaces;
+using IMS.UseCases.Products.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace IMS.UseCases.Products
 {
-    public class ViewProductByIdUseCase
+    public class ViewProductByIdUseCase : IViewProductByIdUseCase
     {
         private readonly IProductRepository productRepository;
 
