@@ -56,16 +56,19 @@
     [Parameter]
     public int ProdId { get; set; }
 
-    private Product product = new();
+    private Product? product;
 
-    protected async override Task OnParametersSetAsync()
+    protected override async Task OnParametersSetAsync()
     {
         product = await ViewProductByIdUseCase.ExecuteAsync(ProdId);
     }
 
     private async Task SaveProduct()
     {
-        await EditProductUseCase.ExecuteAsync(product);
+        if(product!=null)
+        {
+            await EditProductUseCase.ExecuteAsync(product);
+        }
         NavigationManager.NavigateTo("/products");
     }
 
