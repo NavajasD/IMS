@@ -87,8 +87,8 @@ namespace IMS.Plugins.InMemory
 
         public Task UpdateProductAsync(Product product)
         {
-            if(_products.Any(x => x.ProductId != product.ProductId &&
-            x.ProductName.Equals(product.ProductName, StringComparison.OrdinalIgnoreCase) )) 
+            if (_products.Any(x => x.ProductId != product.ProductId &&
+           x.ProductName.ToLower() == product.ProductName.ToLower()))
                 return Task.CompletedTask;
 
             var prod = _products.Find(x => x.ProductId == product.ProductId);

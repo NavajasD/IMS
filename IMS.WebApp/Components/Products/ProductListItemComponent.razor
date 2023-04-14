@@ -1,17 +1,24 @@
-﻿<tr>
+﻿@inject NavigationManager NavigationManager;
+
+<tr>
     <td>@ProductItem.ProductName</td>
     <td>@ProductItem.Quantity</td>
     <td>@ProductItem.Price.ToString("c")</td>
     <td>
         <button type="button"
-                class="btn btn-light">
+                class="btn btn-light"
+                @onclick="@(() => EditProduct(ProductItem.ProductId))">
             Edit
         </button>
     </td>
 </tr>
 
 @code {
-
     [Parameter]
     public Product ProductItem { get; set; } = new();
+
+    private void EditProduct(int productId)
+    {
+        NavigationManager.NavigateTo($"/editproduct/{productId}");
+    }
 }
