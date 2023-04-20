@@ -14,6 +14,7 @@ namespace IMS.Plugins.InMemory
         {
             services.AddSingleton<IInventoryRepository, InventoryRepository>();
             services.AddSingleton<IProductRepository, ProductRepository>();
+            services.AddSingleton<IInventoryTransactionRepository, InventoryTransactionRepository>();
             return services;
         }
     }
