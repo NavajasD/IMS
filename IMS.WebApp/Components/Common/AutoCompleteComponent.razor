@@ -1,4 +1,6 @@
-﻿<div class="form-group">
+﻿@using IMS.WebApp.ViewModels.Common;
+
+<div class="form-group">
     <label for="search">@Label</label>
     <input 
         type="text"
@@ -108,11 +110,5 @@
         {
             OnSelectItem(currentItem);
         }
-    }
-
-    public class ItemViewModel
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
     }
 }
