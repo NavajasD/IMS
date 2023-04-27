@@ -1,13 +1,13 @@
 ﻿using IMS.CoreBusiness;
 using IMS.UseCases.PluginInterfaces;
-using IMS.UseCases.Products.Interfaces;
+using IMS.UseCases.UseCases.Products.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IMS.UseCases.Products
+namespace IMS.UseCases.UseCases.Products
 {
     public class ViewProductsByNameUseCase : IViewProductsByNameUseCase
     {

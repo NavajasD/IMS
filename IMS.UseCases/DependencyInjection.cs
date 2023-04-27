@@ -1,7 +1,9 @@
-﻿using IMS.UseCases.Inventories;
-using IMS.UseCases.Inventories.Interfaces;
-using IMS.UseCases.Products;
-using IMS.UseCases.Products.Interfaces;
+﻿using IMS.UseCases.UseCases.Activities;
+using IMS.UseCases.UseCases.Activities.Interfaces;
+using IMS.UseCases.UseCases.Inventories;
+using IMS.UseCases.UseCases.Inventories.Interfaces;
+using IMS.UseCases.UseCases.Products;
+using IMS.UseCases.UseCases.Products.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

@@ -1,6 +1,6 @@
 ﻿using IMS.CoreBusiness;
 
-namespace IMS.UseCases.Inventories.Interfaces
+namespace IMS.UseCases.UseCases.Inventories.Interfaces
 {
     public interface IAddInventoryUseCase
     {

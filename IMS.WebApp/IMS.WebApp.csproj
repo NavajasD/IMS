@@ -10,4 +10,8 @@
     <ProjectReference Include="..\IMS.Plugins\IMS.Plugins.InMemory\IMS.Plugins.InMemory.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Activities\" />
+  </ItemGroup>
+
 </Project>
