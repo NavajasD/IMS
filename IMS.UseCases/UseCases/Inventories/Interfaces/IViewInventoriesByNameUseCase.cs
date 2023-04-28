@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IMS.UseCases.Inventories.Interfaces
+namespace IMS.UseCases.UseCases.Inventories.Interfaces
 {
     public interface IViewInventoriesByNameUseCase
     {

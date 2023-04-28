@@ -1,0 +1,117 @@
+﻿@page "/purchase"
+
+@inject IToastService toastService;
+
+@inject IViewInventoriesByNameUseCase ViewInventoriesByNameUseCase;
+@inject IViewInventoryByIdUseCase ViewInventoryByIdUseCase;
+@inject IPurchaseInventoryUseCase PurchaseInventoryUseCase;
+
+<h3>PurchaseInventory</h3>
+
+<br />
+
+<EditForm Model="purchaseViewModel" OnValidSubmit="Purchase">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="po">Purchase Order #</label>
+        <InputText id="po"
+                   @bind-Value="purchaseViewModel.PONumber"
+                   class="form-control" />
+    </div>
+
+    <br/>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="form-group">
+                <AutoCompleteComponent Label="Inventory"
+                                       SearchFunction="SearchInventory"
+                                       OnItemSelected="OnItemSelected">
+                </AutoCompleteComponent>
+                <input type="hidden" value="@purchaseViewModel.InventoryId"/>
+                @if (purchaseViewModel.InventoryId > 0 && purchaseViewModel.InventoryPrice >= 0)
+                {
+                    <text>Price:</text>
+                    @purchaseViewModel.InventoryPrice.ToString("c")
+                }
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="form-group">
+        <label for="qty">Quantity</label>
+        <InputNumber id="qty"
+                     @bind-Value="purchaseViewModel.QuantityToPurchase"
+                     class="form-control" />
+    </div>
+
+    <br/>
+
+    @if (purchaseViewModel.InventoryId > 0 && purchaseViewModel.InventoryPrice >= 0 && purchaseViewModel.QuantityToPurchase > 0)
+    {
+        <div class="card">
+            <div class="card-body">
+                <text>Total Price:</text>
+                <text>@((purchaseViewModel.InventoryPrice * purchaseViewModel.QuantityToPurchase).ToString("c"))</text>
+            </div>
+        </div>
+        <br />
+    }
+
+    <button type="submit"
+            class="btn btn-primary">
+        Purchase
+    </button>
+</EditForm>
+
+@code {
+    private PurchaseViewModel purchaseViewModel = new();
+    private Inventory? selectedInventory = null; 
+
+    private void Purchase()
+    {
+        if (selectedInventory != null)
+        {
+            PurchaseInventoryUseCase.ExecuteAsync(
+                purchaseViewModel.PONumber,
+                selectedInventory,
+                purchaseViewModel.QuantityToPurchase,
+                "Users not implemented"
+            );
+
+            toastService.ShowSuccess($"{purchaseViewModel.QuantityToPurchase} units of {selectedInventory.InventoryName} have been succesfully sold for {(purchaseViewModel.InventoryPrice * purchaseViewModel.QuantityToPurchase).ToString("c")}");
+            ClearForm();
+        }
+    }
+
+    private void ClearForm()
+    {
+        purchaseViewModel = new();
+        selectedInventory = null;
+    }
+
+    private List<ItemViewModel>? SearchInventory(string name)
+    {
+        var list = ViewInventoriesByNameUseCase.ExecuteAsync(name).GetAwaiter().GetResult();
+
+        if (list == null) return null;
+
+        return list.Select(x => new ItemViewModel { Id = x.InventoryId, Name = x.InventoryName })?.ToList();
+    }
+
+    private async Task OnItemSelected(ItemViewModel item)
+    {
+        selectedInventory = await ViewInventoryByIdUseCase.ExecuteAsync(item.Id);
+
+        if(selectedInventory != null)
+        {
+            purchaseViewModel.InventoryId = selectedInventory.InventoryId;
+            purchaseViewModel.InventoryPrice = selectedInventory.Price;
+        }
+        
+    }
+}

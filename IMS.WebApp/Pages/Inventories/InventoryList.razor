@@ -1,6 +1,7 @@
 ﻿@page "/inventories"
 
 @inject NavigationManager NavigationManager;
+@inject IViewInventoriesByNameUseCase ViewInventoriesByNameUseCase;
 
 <h3>Inventory List</h3>
 
@@ -19,7 +20,10 @@
         @onclick="AddInventory">
     Add Inventory</button>
 
+<br />
+
 @code {
+
     private string searchTerm = string.Empty;
 
     private void OnInventorySearch(string searchTerm)
@@ -31,4 +35,6 @@
     {
         NavigationManager.NavigateTo("/addinventory");
     }
+
+    
 }
