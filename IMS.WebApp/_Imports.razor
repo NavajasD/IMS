@@ -1,4 +1,5 @@
-﻿@using System.Net.Http
+﻿@*.net*@
+@using System.Net.Http
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Forms
@@ -7,14 +8,28 @@
 @using Microsoft.AspNetCore.Components.Web.Virtualization
 @using Microsoft.JSInterop
 
-@using IMS.UseCases.Inventories.Interfaces
-@using IMS.UseCases.Products.Interfaces
+@*use cases*@
+@using IMS.UseCases.UseCases.Inventories.Interfaces
+@using IMS.UseCases.UseCases.Products.Interfaces
+@using IMS.UseCases.UseCases.Activities.Interfaces
 
+@*core business*@
 @using IMS.CoreBusiness
 
+@*viewmodels*@
+@using IMS.WebApp.ViewModels.Activities;
+@using IMS.WebApp.ViewModels.Common;
+
+@*components*@
 @using IMS.WebApp.Components.Inventories
 @using IMS.WebApp.Components.Products
+@using IMS.WebApp.Components.Common
 
+@*3rd party components*@
+@using Blazored.Toast
+@using Blazored.Toast.Services
+
+@*core page*@
 @using IMS.WebApp
 @using IMS.WebApp.Shared
 

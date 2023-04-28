@@ -1,8 +1,7 @@
 using IMS.WebApp.Data;
 using IMS.Plugins.InMemory;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using IMS.UseCases;
+using Blazored.Toast;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +10,14 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 
+//Add IMS Libraries to the container
 builder.Services
     .AddRepositories()
     .AddUseCases();
+
+//Add 3rd Party Libraries to the container
+builder.Services
+    .AddBlazoredToast();
 
 var app = builder.Build();
 
