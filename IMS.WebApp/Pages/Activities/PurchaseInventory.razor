@@ -83,7 +83,7 @@
                 "Users not implemented"
             );
 
-            toastService.ShowSuccess($"{purchaseViewModel.QuantityToPurchase} units of {selectedInventory.InventoryName} have been succesfully sold for {(purchaseViewModel.InventoryPrice * purchaseViewModel.QuantityToPurchase).ToString("c")}");
+            toastService.ShowSuccess($"{purchaseViewModel.QuantityToPurchase} units of {selectedInventory.InventoryName} have been succesfully purchased for {(purchaseViewModel.InventoryPrice * purchaseViewModel.QuantityToPurchase).ToString("c")}");
             ClearForm();
         }
     }
