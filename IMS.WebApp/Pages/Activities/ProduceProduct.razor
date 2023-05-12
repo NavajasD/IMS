@@ -1,0 +1,100 @@
+﻿@page "/produce"
+
+@inject IToastService toastService;
+
+@inject IProduceProductUseCase ProduceProductUseCase;
+@inject IViewProductsByNameUseCase ViewProductsByNameUseCase;
+@inject IViewProductByIdUseCase ViewProductByIdUseCase;
+
+<h3>Produce Product</h3>
+
+<br/>
+
+<EditForm Model="produceViewModel" OnValidSubmit="Produce">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="pn">Production #</label>
+        <InputText id="pn"
+                   @bind-Value="produceViewModel.ProductionNumber"
+                   class="form-control" />
+    </div>
+
+    <br />
+
+    <div class="card">
+        <div class="card-body">
+            <div class="form-group">
+                <AutoCompleteComponent Label="Product"
+                                       SearchFunction="SearchProduct"
+                                       OnItemSelected="OnItemSelected">
+                </AutoCompleteComponent>
+                <input type="hidden" value="@produceViewModel.ProductId" />
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="form-group">
+        <label for="qty">Quantity</label>
+        <InputNumber id="qty"
+                     @bind-Value="produceViewModel.QuantityToProduce"
+                     class="form-control" />
+    </div>
+
+    <br />
+
+    <button type="submit"
+            class="btn btn-primary">
+        Produce
+    </button>
+</EditForm>
+
+@code {
+    private ProduceViewModel produceViewModel = new();
+    private Product? selectedProduct = null;
+
+    private void Produce()
+    {
+        if(selectedProduct != null)
+        {
+            ProduceProductUseCase.ExecuteAsync(
+                produceViewModel.ProductionNumber,
+                selectedProduct,
+                produceViewModel.QuantityToProduce,
+                "Users not implemented"
+            );
+
+            toastService.ShowSuccess($"{produceViewModel.QuantityToProduce} units of {selectedProduct.ProductName} have been succesfully produced");
+            ClearForm();
+        }
+    }
+
+    private void ClearForm()
+    {
+        produceViewModel = new();
+        selectedProduct = null;
+    }
+
+    private List<ItemViewModel>? SearchProduct(string name)
+    {
+        var list = ViewProductsByNameUseCase.ExecuteAsync(name).GetAwaiter().GetResult();
+
+        if (list == null) return null;
+
+        return list.Select(x => new ItemViewModel { Id = x.ProductId, Name = x.ProductName })?.ToList();
+    }
+
+    private async Task OnItemSelected(ItemViewModel item)
+    {
+        selectedProduct = await ViewProductByIdUseCase.ExecuteAsync(item.Id);
+
+        if (selectedProduct != null)
+        {
+            produceViewModel.ProductId = selectedProduct.ProductId;
+        }
+    }
+
+}
