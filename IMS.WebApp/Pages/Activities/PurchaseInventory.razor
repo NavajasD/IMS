@@ -6,11 +6,13 @@
 @inject IViewInventoryByIdUseCase ViewInventoryByIdUseCase;
 @inject IPurchaseInventoryUseCase PurchaseInventoryUseCase;
 
-<h3>PurchaseInventory</h3>
+@inject IJSRuntime JSRuntime;
+
+<h3>Purchase Inventory</h3>
 
 <br />
 
-<EditForm Model="purchaseViewModel" OnValidSubmit="Purchase">
+<EditForm id="purchase-form" Model="purchaseViewModel" OnValidSubmit="Purchase">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
@@ -72,6 +74,16 @@
     private PurchaseViewModel purchaseViewModel = new();
     private Inventory? selectedInventory = null; 
 
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        if (firstRender)
+        {
+            JSRuntime.InvokeVoidAsync("PreventFormSubmissionOnEnter", "purchase-form");
+        }
+    }
+
     private void Purchase()
     {
         if (selectedInventory != null)
@@ -83,7 +95,7 @@
                 "Users not implemented"
             );
 
-            toastService.ShowSuccess($"{purchaseViewModel.QuantityToPurchase} units of {selectedInventory.InventoryName} have been succesfully sold for {(purchaseViewModel.InventoryPrice * purchaseViewModel.QuantityToPurchase).ToString("c")}");
+            toastService.ShowSuccess($"{purchaseViewModel.QuantityToPurchase} units of {selectedInventory.InventoryName} have been succesfully purchased for {(purchaseViewModel.InventoryPrice * purchaseViewModel.QuantityToPurchase).ToString("c")}");
             ClearForm();
         }
     }

@@ -82,7 +82,7 @@ namespace IMS.Plugins.InMemory
             if (string.IsNullOrWhiteSpace(name)) 
                 return await Task.FromResult(_products);
 
-            return _products.Where(x => x.ProductName.Equals(name, StringComparison.OrdinalIgnoreCase));
+            return _products.Where(x => x.ProductName.Contains(name, StringComparison.OrdinalIgnoreCase));
         }
 
         public Task UpdateProductAsync(Product product)
