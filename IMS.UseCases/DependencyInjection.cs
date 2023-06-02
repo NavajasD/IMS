@@ -29,6 +29,7 @@ namespace IMS.UseCases
 
             services.AddTransient<IPurchaseInventoryUseCase, PurchaseInventoryUseCase>();
             services.AddTransient<IProduceProductUseCase, ProduceProductUseCase>();
+            services.AddTransient<ISellProductUseCase, SellProductUseCase>();
 
             return services;
         }

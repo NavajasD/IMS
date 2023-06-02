@@ -1,0 +1,119 @@
+﻿@page "/sell"
+
+@inject IToastService toastService;
+@inject IJSRuntime JSRuntime;
+
+@inject IViewProductsByNameUseCase ViewProductsByNameUseCase;
+@inject IViewProductByIdUseCase ViewProductByIdUseCase;
+@inject ISellProductUseCase SellProductUseCase;
+
+
+
+<h3>Sell Product</h3>
+
+<br />
+
+<EditForm id="sell-form" Model="sellViewModel" OnValidSubmit="Sell">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="so">Sales Order #</label>
+        <InputText id="so"
+                   @bind-Value="sellViewModel.SalesOrderNumber"
+                   class="form-control" />
+    </div>
+
+    <br />
+
+    <div class="card">
+        <div class="card-body">
+            <div class="form-group">
+                <AutoCompleteComponent Label="Product"
+                                       SearchFunction="SearchProduct"
+                                       OnItemSelected="OnItemSelected">
+                </AutoCompleteComponent>
+                <input type="hidden" value="@sellViewModel.ProductId" />
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="form-group">
+        <label for="qty">Quantity</label>
+        <InputNumber id="qty"
+                     @bind-Value="sellViewModel.QuantityToSell"
+                     class="form-control" />
+    </div>
+
+    <br />
+
+    <div class="form-group">
+        <label for="price">Unit Price</label>
+        <InputNumber id="price"
+                     @bind-Value="sellViewModel.UnitPrice"
+                     class="form-control" />
+    </div>
+
+    <br />
+
+    <button type="submit"
+            class="btn btn-primary">
+        Sell
+    </button>
+</EditForm>
+
+@code {
+    private SellViewModel sellViewModel = new SellViewModel();
+    private Product? selectedProduct = null;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        if (firstRender)
+        {
+            JSRuntime.InvokeVoidAsync("PreventFormSubmissionOnEnter", "sell-form");
+        }
+    }
+
+    private async Task Sell()
+    {
+        if(sellViewModel.Product != null)
+        {
+            await SellProductUseCase.ExecuteAsync(sellViewModel.SalesOrderNumber,
+            sellViewModel.Product,
+            sellViewModel.QuantityToSell,
+            sellViewModel.UnitPrice,
+            "Users not implemented");
+
+            toastService.ShowSuccess($"{sellViewModel.QuantityToSell} units of {sellViewModel.Product.ProductName} have been succesfully sold");
+            ClearForm();
+        }
+    }
+
+    private void ClearForm()
+    {
+        sellViewModel = new();
+        selectedProduct = null;
+    }
+
+    private List<ItemViewModel>? SearchProduct(string name)
+    {
+        var list = ViewProductsByNameUseCase.ExecuteAsync(name).GetAwaiter().GetResult();
+
+        if (list == null) return null;
+
+        return list.Select(x => new ItemViewModel { Id = x.ProductId, Name = x.ProductName })?.ToList();
+    }
+
+    private async Task OnItemSelected(ItemViewModel item)
+    {
+        this.selectedProduct = await ViewProductByIdUseCase.ExecuteAsync(item.Id);
+        sellViewModel.ProductId = item.Id;
+        sellViewModel.Product = selectedProduct;
+        sellViewModel.UnitPrice = selectedProduct.Price;
+    }
+
+}
