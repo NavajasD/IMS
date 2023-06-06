@@ -23,6 +23,7 @@ namespace IMS.CoreBusiness
         public double UnitPrice { get; set; }
         [Required]
         public DateTime TransactionDate { get; set; }
+        [Required]
         public string DoneBy { get; set; } = string.Empty;
 
         public Inventory? Inventory { get; set; }

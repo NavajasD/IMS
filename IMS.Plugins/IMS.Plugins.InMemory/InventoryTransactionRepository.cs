@@ -10,7 +10,44 @@ namespace IMS.Plugins.InMemory
 {
     public class InventoryTransactionRepository : IInventoryTransactionRepository
     {
+        private readonly IInventoryRepository inventoryRepository;
         public List<InventoryTransaction> _inventoryTransactions = new();
+
+        public InventoryTransactionRepository(IInventoryRepository inventoryRepository)
+        {
+            this.inventoryRepository = inventoryRepository;
+        }
+
+        public async Task<IEnumerable<InventoryTransaction>> GetInventoryTransactionsAsync(string inventoryName, DateTime? dateFrom, DateTime? dateTo, InventoryTransactionType? transactionType)
+        {
+            var inventories = (await inventoryRepository.GetInventoriesByNameAsync(string.Empty)).ToList();
+
+            var query = from invTransactions in _inventoryTransactions
+                        join inv in inventories
+                        on invTransactions.InventoryId equals inv.InventoryId
+                        where
+                        (string.IsNullOrEmpty(inventoryName) || inv.InventoryName.ToLower().IndexOf(inventoryName.ToLower()) >= 0)
+                        &&
+                        (!dateFrom.HasValue || invTransactions.TransactionDate >= dateFrom.Value.Date)
+                        &&
+                        (!dateTo.HasValue || invTransactions.TransactionDate <= dateTo.Value.Date)
+                        &&
+                        (!transactionType.HasValue || invTransactions.ActivityType == transactionType.Value)
+                        select new InventoryTransaction
+                        {
+                            Inventory = inv,
+                            InventoryTransactionId = invTransactions.InventoryTransactionId,
+                            PoNumber = invTransactions.PoNumber,
+                            InventoryId = invTransactions.InventoryId,
+                            QuantityBefore= invTransactions.QuantityBefore,
+                            ActivityType = invTransactions.ActivityType,
+                            QuantityAfter= invTransactions.QuantityAfter,
+                            TransactionDate= invTransactions.TransactionDate,
+                            DoneBy = invTransactions.DoneBy,
+                            UnitPrice = invTransactions.UnitPrice
+                        };
+            return query;
+        }
 
         public Task ProduceAsync(string productionNumber, Inventory inventory, int quantityToConsume, string doneBy, double price)
         {

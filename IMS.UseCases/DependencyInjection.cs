@@ -4,6 +4,8 @@ using IMS.UseCases.UseCases.Inventories;
 using IMS.UseCases.UseCases.Inventories.Interfaces;
 using IMS.UseCases.UseCases.Products;
 using IMS.UseCases.UseCases.Products.Interfaces;
+using IMS.UseCases.UseCases.Reports;
+using IMS.UseCases.UseCases.Reports.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -30,6 +32,8 @@ namespace IMS.UseCases
             services.AddTransient<IPurchaseInventoryUseCase, PurchaseInventoryUseCase>();
             services.AddTransient<IProduceProductUseCase, ProduceProductUseCase>();
             services.AddTransient<ISellProductUseCase, SellProductUseCase>();
+
+            services.AddTransient<ISearchInventoryTransactionsUseCase, SearchInventoryTransactionsUseCase>();
 
             return services;
         }
