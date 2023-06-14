@@ -38,6 +38,7 @@ namespace IMS.Plugins.InMemory
                             Inventory = inv,
                             InventoryTransactionId = invTransactions.InventoryTransactionId,
                             PoNumber = invTransactions.PoNumber,
+                            ProductionNumber = invTransactions.ProductionNumber,
                             InventoryId = invTransactions.InventoryId,
                             QuantityBefore= invTransactions.QuantityBefore,
                             ActivityType = invTransactions.ActivityType,
