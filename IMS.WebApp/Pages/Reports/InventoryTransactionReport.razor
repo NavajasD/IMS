@@ -49,6 +49,7 @@
                 <th>Activity</th>
                 <th>Qty. Before</th>
                 <th>Qty. After</th>
+                <th>Unit Price</th>
                 <th>PO No.</th>
                 <th>Production No.</th>
             </tr>
@@ -72,6 +73,7 @@
                     </td>
                     <td>@invTransaction.QuantityBefore</td>
                     <td>@invTransaction.QuantityAfter</td>
+                    <td>@invTransaction.UnitPrice.ToString("c")</td>
                     <td>@invTransaction.PoNumber</td>
                     <td>@invTransaction.ProductionNumber</td>
                 </tr>
