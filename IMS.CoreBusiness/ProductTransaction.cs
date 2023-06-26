@@ -25,6 +25,6 @@ namespace IMS.CoreBusiness
         public DateTime TransactionDate { get; set; }
         public string DoneBy { get; set; } = string.Empty;
 
-        public Product? Inventory { get; set; }
+        public Product? Product { get; set; }
     }
 }

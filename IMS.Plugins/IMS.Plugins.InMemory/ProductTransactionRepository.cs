@@ -69,5 +69,37 @@ namespace IMS.Plugins.InMemory
             });
             return Task.CompletedTask;
         }
+
+        public async Task<IEnumerable<ProductTransaction>> GetProductTransactionsAsync(string productName, DateTime? dateFrom, DateTime? dateTo, ProductTransactionType? transactionType)
+        {
+            var products = (await productRepository.GetProductsByNameAsync(string.Empty)).ToList();
+
+            var query = from prodTransaction in _productTransactions
+                        join prod in products
+                        on prodTransaction.ProductId equals prod.ProductId
+                        where
+                        (string.IsNullOrEmpty(productName) || prod.ProductName.ToLower().IndexOf(productName.ToLower()) >= 0)
+                        &&
+                        (!dateFrom.HasValue || prodTransaction.TransactionDate >= dateFrom.Value.Date)
+                        &&
+                        (!dateTo.HasValue || prodTransaction.TransactionDate <= dateTo.Value.Date)
+                        &&
+                        (!transactionType.HasValue || prodTransaction.ActivityType == transactionType.Value)
+                        select new ProductTransaction
+                        {
+                            Product = prod,
+                            ProductTransactionId = prodTransaction.ProductTransactionId,
+                            SoNumber = prodTransaction.SoNumber,
+                            ProductionNumber = prodTransaction.ProductionNumber,
+                            ProductId = prodTransaction.ProductId,
+                            ActivityType = prodTransaction.ActivityType,
+                            QuantityBefore = prodTransaction.QuantityBefore,
+                            QuantityAfter = prodTransaction.QuantityAfter,
+                            UnitPrice = prodTransaction.UnitPrice,
+                            TransactionDate = prodTransaction.TransactionDate,
+                            DoneBy = prodTransaction.DoneBy
+                        };
+            return query;
+        }
     }
 }
