@@ -1,86 +1,92 @@
 ﻿@page "/inventoryreport"
 
 @inject ISearchInventoryTransactionsUseCase SearchInventoryTransactionsUseCase;
+@inject IJSRuntime JSRuntime;
 
 <h3>Inventory Transactions</h3>
 
-<br/>
-
-<div class="row">
-    <div class="col">
-        <label for="inv">Inventory Name</label>
-        <input type="text" id="inv" class="form-control" @bind-value="inventoryName"/>
-    </div>
-    <div class="col">
-        <label for="df">From Date</label>
-        <input type="date" id="df" class="form-control" @bind-value="dateFrom"/>
-    </div>
-    <div class="col">
-        <label for="dt">To Date</label>
-        <input type="date" id="dt" class="form-control" @bind-value="dateTo" />
-    </div>
-    <div class="col">
-        <label for="at">Activity Type</label>
-        <select id="at" class="form-control" @bind="activityTypeId">
-            <option value="0"></option>
-            <option value="1">Purchase Inventory</option>
-            <option value="2">Produce Product</option>
-        </select>
-    </div>
-    <div class="col">
-        <label>&nbsp;</label>
-        <button type="button" class="btn btn-primary form-control" @onclick="SearchInventories">Search</button>
-    </div>
-    <div class="col">
-        <label>&nbsp;</label>
-        <button type="button" class="btn btn-primary form-control" @onclick="PrintReport">Print</button>
-    </div>
-</div>
-
 <br />
 
-@if(inventoryTransactions != null)
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Inventory</th>
-                <th>Activity</th>
-                <th>Qty. Before</th>
-                <th>Qty. After</th>
-                <th>Unit Price</th>
-                <th>PO No.</th>
-                <th>Production No.</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(var invTransaction in inventoryTransactions)
-            {
+<div id="print-area">
+
+    <div class="row">
+        <div class="col">
+            <label for="inv">Inventory Name</label>
+            <input type="text" id="inv" class="form-control" @bind-value="inventoryName" />
+        </div>
+        <div class="col">
+            <label for="df">From Date</label>
+            <input type="date" id="df" class="form-control" @bind-value="dateFrom" />
+        </div>
+        <div class="col">
+            <label for="dt">To Date</label>
+            <input type="date" id="dt" class="form-control" @bind-value="dateTo" />
+        </div>
+        <div class="col">
+            <label for="at">Activity Type</label>
+            <select id="at" class="form-control" @bind="activityTypeId">
+                <option value="0"></option>
+                <option value="1">Purchase Inventory</option>
+                <option value="2">Produce Product</option>
+            </select>
+        </div>
+        <div class="col">
+            <label>&nbsp;</label>
+            <button type="button" class="btn btn-primary form-control" @onclick="SearchInventories">Search</button>
+        </div>
+        <div class="col">
+            <label>&nbsp;</label>
+            <button type="button" class="btn btn-primary form-control" @onclick="PrintReport">Print</button>
+        </div>
+    </div>
+
+    <br />
+
+    @if (inventoryTransactions != null)
+    {
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>@invTransaction.TransactionDate.ToString("dd/MM/yyyy")</td>
-                    <td>@invTransaction.Inventory.InventoryName</td>
-                    <td>
-                        @switch(invTransaction.ActivityType)
-                        {
-                            case InventoryTransactionType.PurchaseInventory:
-                                <text>Purchase</text>
-                                break;
-                            case InventoryTransactionType.ProduceProduct:
-                                <text>Produce</text>
-                                break;
-                        }
-                    </td>
-                    <td>@invTransaction.QuantityBefore</td>
-                    <td>@invTransaction.QuantityAfter</td>
-                    <td>@invTransaction.UnitPrice.ToString("c")</td>
-                    <td>@invTransaction.PoNumber</td>
-                    <td>@invTransaction.ProductionNumber</td>
+                    <th>Date</th>
+                    <th>Inventory</th>
+                    <th>Activity</th>
+                    <th>Qty. Before</th>
+                    <th>Qty. After</th>
+                    <th>Unit Price</th>
+                    <th>PO No.</th>
+                    <th>Production No.</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-}
+            </thead>
+            <tbody>
+                @foreach (var invTransaction in inventoryTransactions)
+                {
+                    <tr>
+                        <td>@invTransaction.TransactionDate.ToString("dd/MM/yyyy")</td>
+                        <td>@invTransaction.Inventory.InventoryName</td>
+                        <td>
+                            @switch (invTransaction.ActivityType)
+                            {
+                                case InventoryTransactionType.PurchaseInventory:
+                                    <text>Purchase</text>
+                                    break;
+                                case InventoryTransactionType.ProduceProduct:
+                                    <text>Produce</text>
+                                    break;
+                            }
+                        </td>
+                        <td>@invTransaction.QuantityBefore</td>
+                        <td>@invTransaction.QuantityAfter</td>
+                        <td>@invTransaction.UnitPrice.ToString("c")</td>
+                        <td>@invTransaction.PoNumber</td>
+                        <td>@invTransaction.ProductionNumber</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+    }
+</div>
 
 @code {
     private string inventoryName = string.Empty;
@@ -99,6 +105,6 @@
 
     private async Task PrintReport()
     {
-        
+        await JSRuntime.InvokeVoidAsync("print");
     }
 }
