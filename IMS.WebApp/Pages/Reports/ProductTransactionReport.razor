@@ -1,6 +1,7 @@
 ﻿@page "/productreport"
 
 @inject ISearchProductTransactionsUseCase SearchProductTransactionsUseCase;
+@inject IJSRuntime JSRuntime;
 
 <h3>Product Transactions</h3>
 
@@ -101,6 +102,6 @@
 
     private async Task PrintReport()
     {
-
+        await JSRuntime.InvokeVoidAsync("print");
     }
 }
