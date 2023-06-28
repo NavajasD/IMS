@@ -23,6 +23,7 @@ namespace IMS.CoreBusiness
         public double Price { get; set; }
         [Product_EnsurePriceIsGreaterThanTotalInventoriesCost]
         public List<ProductInventory> ProductInventories { get; set; } = new();
+        public List<ProductTransaction> ProductTransactions { get; set; } = new();
 
         public void AddInventory(Inventory inventory)
         {
