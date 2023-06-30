@@ -10,7 +10,7 @@ namespace IMS.Plugins.InMemory
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddRepositories(this IServiceCollection services)
+        public static IServiceCollection AddInMemoryRepositories(this IServiceCollection services)
         {
             services.AddSingleton<IInventoryRepository, InventoryRepository>();
             services.AddSingleton<IProductRepository, ProductRepository>();

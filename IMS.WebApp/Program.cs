@@ -2,6 +2,8 @@ using IMS.WebApp.Data;
 using IMS.Plugins.InMemory;
 using IMS.UseCases;
 using Blazored.Toast;
+using IMS.Plugins.EFCoreSqlServer;
+using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +13,20 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 
 //Add IMS Libraries to the container
-builder.Services
-    .AddRepositories()
-    .AddUseCases();
+if(builder.Environment.IsEnvironment("TESTING"))
+{
+    StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
+    builder.Services
+        .AddInMemoryRepositories();
+}
+else
+{
+    builder.Services
+    .AddDatabaseContext(builder.Configuration)
+    .AddEfCoreRepositories();
+}
+
+builder.Services.AddUseCases();
 
 //Add 3rd Party Libraries to the container
 builder.Services
