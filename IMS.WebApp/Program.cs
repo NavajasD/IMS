@@ -2,6 +2,7 @@ using IMS.WebApp.Data;
 using IMS.Plugins.InMemory;
 using IMS.UseCases;
 using Blazored.Toast;
+using IMS.Plugins.EFCoreSqlServer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +13,8 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 //Add IMS Libraries to the container
 builder.Services
-    .AddRepositories()
+    .AddDatabaseContext(builder.Configuration)
+    .AddInMemoryRepositories()
     .AddUseCases();
 
 //Add 3rd Party Libraries to the container
