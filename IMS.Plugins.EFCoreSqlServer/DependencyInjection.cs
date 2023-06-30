@@ -16,7 +16,7 @@ namespace IMS.Plugins.EFCoreSqlServer
         public static IServiceCollection AddDatabaseContext(this IServiceCollection service, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("SQLServer");
-            service.AddDbContext<IMSContext>(dbOption => dbOption.UseSqlServer(connectionString));
+            service.AddDbContextFactory<IMSContext>(dbOption => dbOption.UseSqlServer(connectionString));
             return service;
         }
         public static IServiceCollection AddEfCoreRepositories(this IServiceCollection services)

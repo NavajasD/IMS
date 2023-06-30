@@ -11,20 +11,21 @@ namespace IMS.Plugins.EFCoreSqlServer.Repositories
 {
     public class ProductTransactionRepository : IProductTransactionRepository
     {
-        private readonly IMSContext dbContext;
+        private readonly IDbContextFactory<IMSContext> contextFactory;
         private readonly IInventoryRepository inventoryRepository;
         private readonly IProductRepository productRepository;
         private readonly IInventoryTransactionRepository inventoryTransactionRepository;
 
-        public ProductTransactionRepository(IMSContext dbContext, IInventoryRepository inventoryRepository, IProductRepository productRepository, IInventoryTransactionRepository inventoryTransactionRepository)
+        public ProductTransactionRepository(IDbContextFactory<IMSContext> contextFactory, IInventoryRepository inventoryRepository, IProductRepository productRepository, IInventoryTransactionRepository inventoryTransactionRepository)
         {
-            this.dbContext = dbContext;
+            this.contextFactory = contextFactory;
             this.inventoryRepository = inventoryRepository;
             this.productRepository = productRepository;
             this.inventoryTransactionRepository = inventoryTransactionRepository;
         }
         public async Task<IEnumerable<ProductTransaction>> GetProductTransactionsAsync(string productName, DateTime? dateFrom, DateTime? dateTo, ProductTransactionType? transactionType)
         {
+            using var dbContext = await contextFactory.CreateDbContextAsync();
             var query = from prodTransaction in dbContext.ProductTransactions
                         join prod in dbContext.Products
                         on prodTransaction.ProductId equals prod.ProductId
@@ -42,6 +43,7 @@ namespace IMS.Plugins.EFCoreSqlServer.Repositories
 
         public async Task ProduceAsync(string productionNumber, Product product, int quantity, string doneBy)
         {
+            using var dbContext = await contextFactory.CreateDbContextAsync();
             var prod = await productRepository.GetProductByIdAsync(product.ProductId);
             if (prod != null)
             {
@@ -73,6 +75,7 @@ namespace IMS.Plugins.EFCoreSqlServer.Repositories
 
         public async Task SellProductAsync(string salesOrderNumber, Product product, int quantity, double unitPrice, string doneBy)
         {
+            using var dbContext = await contextFactory.CreateDbContextAsync();
             dbContext.ProductTransactions.Add(new()
             {
                 ActivityType = ProductTransactionType.SellProduct,

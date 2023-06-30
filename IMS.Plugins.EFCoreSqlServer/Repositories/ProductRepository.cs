@@ -11,14 +11,15 @@ namespace IMS.Plugins.EFCoreSqlServer.Repositories
 {
     public class ProductRepository : IProductRepository
     {
-        private readonly IMSContext dbContext;
+        private readonly IDbContextFactory<IMSContext> contextFactory;
 
-        public ProductRepository(IMSContext dbContext)
+        public ProductRepository(IDbContextFactory<IMSContext> contextFactory)
         {
-            this.dbContext = dbContext;
+            this.contextFactory = contextFactory;
         }
         public async Task AddProductAsync(Product product)
         {
+            using var dbContext = await contextFactory.CreateDbContextAsync();
             dbContext.Products.Add(product);
             FlagInventoryUnchanged(product, dbContext);
             await dbContext.SaveChangesAsync();
@@ -39,6 +40,7 @@ namespace IMS.Plugins.EFCoreSqlServer.Repositories
 
         public async Task<Product> GetProductByIdAsync(int productId)
         {
+            using var dbContext = await contextFactory.CreateDbContextAsync();
             var product = await dbContext
                 .Products
                 .Include(x => x.ProductInventories)
@@ -51,6 +53,7 @@ namespace IMS.Plugins.EFCoreSqlServer.Repositories
 
         public async Task<IEnumerable<Product>> GetProductsByNameAsync(string name)
         {
+            using var dbContext = await contextFactory.CreateDbContextAsync();
             return await dbContext
                 .Products
                 .Where(x => x.ProductName.Contains(name, StringComparison.OrdinalIgnoreCase))
@@ -59,6 +62,7 @@ namespace IMS.Plugins.EFCoreSqlServer.Repositories
 
         public async Task UpdateProductAsync(Product product)
         {
+            using var dbContext = await contextFactory.CreateDbContextAsync();
             var prod = await dbContext
                 .Products
                 .Include(x => x.ProductInventories)
