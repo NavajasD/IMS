@@ -3,6 +3,7 @@ using IMS.UseCases;
 using Blazored.Toast;
 using IMS.Plugins.EFCoreSqlServer;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
+using IMS.WebApp.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +12,12 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
 // Configure EFCore for identity
+builder.Services
+    .AddIdentityDatabaseContext(builder.Configuration)
+    .AddIdentity();
 
 //Add IMS Libraries to the container
-if(builder.Environment.IsEnvironment("TESTING"))
+if (builder.Environment.IsEnvironment("TESTING"))
 {
     StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
     builder.Services
