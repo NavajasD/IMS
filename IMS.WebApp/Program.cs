@@ -14,7 +14,7 @@ builder.Services.AddSingleton<WeatherForecastService>();
 //Add IMS Libraries to the container
 builder.Services
     .AddDatabaseContext(builder.Configuration)
-    .AddInMemoryRepositories()
+    .AddEfCoreRepositories()
     .AddUseCases();
 
 //Add 3rd Party Libraries to the container

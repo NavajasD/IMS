@@ -22,6 +22,9 @@ namespace IMS.Plugins.EFCoreSqlServer
         public static IServiceCollection AddEfCoreRepositories(this IServiceCollection services)
         {
             services.AddSingleton<IInventoryRepository, InventoryRepository>();
+            services.AddSingleton<IProductRepository, ProductRepository>();
+            services.AddSingleton<IInventoryTransactionRepository, InventoryTransactionRepository>();
+            services.AddSingleton<IProductTransactionRepository, ProductTransactionRepository>();
             return services;
         }
     }
