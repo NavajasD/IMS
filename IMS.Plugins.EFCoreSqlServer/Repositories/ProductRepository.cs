@@ -56,7 +56,7 @@ namespace IMS.Plugins.EFCoreSqlServer.Repositories
             using var dbContext = await contextFactory.CreateDbContextAsync();
             return await dbContext
                 .Products
-                .Where(x => x.ProductName.Contains(name, StringComparison.OrdinalIgnoreCase))
+                .Where(x => x.ProductName.ToLower().IndexOf(name.ToLower()) >= 0)
                 .ToListAsync();
         }
 
