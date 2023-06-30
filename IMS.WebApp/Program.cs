@@ -1,4 +1,3 @@
-using IMS.WebApp.Data;
 using IMS.Plugins.InMemory;
 using IMS.UseCases;
 using Blazored.Toast;
@@ -10,7 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
+
+// Configure EFCore for identity
 
 //Add IMS Libraries to the container
 if(builder.Environment.IsEnvironment("TESTING"))
@@ -47,6 +47,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+//authentication and authorization
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
