@@ -12,10 +12,19 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 
 //Add IMS Libraries to the container
-builder.Services
+if(builder.Environment.IsEnvironment("TESTING"))
+{
+    builder.Services
+        .AddInMemoryRepositories();
+}
+else
+{
+    builder.Services
     .AddDatabaseContext(builder.Configuration)
-    .AddEfCoreRepositories()
-    .AddUseCases();
+    .AddEfCoreRepositories();
+}
+
+builder.Services.AddUseCases();
 
 //Add 3rd Party Libraries to the container
 builder.Services
